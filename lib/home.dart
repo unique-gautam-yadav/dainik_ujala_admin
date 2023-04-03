@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 import 'backend/api.dart';
 import 'backend/models.dart';
@@ -14,38 +15,12 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int pageNo = 1;
-  bool hasMore = true;
-
-  late List<Widget> newsItems;
-
-  loadNews() async {
-    Iterable<NewsArtical> d = await FetchData.callApi(page: pageNo);
-    newsItems = <Widget>[];
-    if (mounted) {
-      setState(() {
-        if (d.isNotEmpty) {
-          for (int i = 0; i < d.length; i++) {
-            Widget one = ListTile(
-              title: Text(d.elementAt(i).title),
-              // subtitle: ,
-            );
-            // Widget one = Article(data: d.elementAt(i), curIndex: i);
-            newsItems.add(one);
-          }
-          pageNo++;
-        } else {
-          hasMore = false;
-        }
-      });
-    }
-  }
-
   @override
   void initState() {
     super.initState();
-    loadNews();
   }
+
+  int pageNo = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -53,19 +28,96 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: const Text("Home Page"),
       ),
-      body: Column(
-        children: [
-          OutlinedButton(
-              onPressed: () {
-                sendNotification();
-              },
-              child: const Text("Send")),
-        ],
+      body: SizedBox(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        child: Column(
+          children: [
+            Expanded(
+              child: FutureBuilder<Iterable<NewsArtical>>(
+                future: FetchData.callApi(page: pageNo),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return ListView.builder(
+                      itemCount: snapshot.data!.length,
+                      itemBuilder: (context, index) {
+                        NewsArtical a = snapshot.data!.elementAt(index);
+                        return ListTile(
+                          onTap: () async {
+                            await sendNotification(
+                              body: a.title
+                                  .replaceAll(RegExp(r'<[^>]*>|&[^;]+;'), ''),
+                              imgUrl: a.urlToImage,
+                              title: "Latest News",
+                              url: a.url,
+                            );
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(content: Text("Sent")));
+                            }
+                          },
+                          title: Text(
+                            a.title.replaceAll(RegExp(r'<[^>]*>|&[^;]+;'), ''),
+                            maxLines: 3,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          leading: SizedBox(
+                            height: 50,
+                            width: 100,
+                            child: CachedNetworkImage(
+                              imageUrl: a.urlToImage,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          subtitle: Text(
+                            a.content
+                                .replaceAll(RegExp(r'<[^>]*>|&[^;]+;'), ''),
+                            maxLines: 4,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        );
+                      },
+                    );
+                  } else {
+                    return const CircularProgressIndicator();
+                  }
+                },
+              ),
+            ),
+            Text("Current Page : $pageNo"),
+            SizedBox(
+              width: MediaQuery.of(context).size.width,
+              height: 60,
+              child: ButtonBar(children: [
+                TextButton(
+                    onPressed: () {
+                      if (pageNo != 1) {
+                        setState(() {
+                          pageNo--;
+                        });
+                      }
+                    },
+                    child: const Text("Prev")),
+                TextButton(
+                    onPressed: () {
+                      setState(() {
+                        pageNo++;
+                      });
+                    },
+                    child: const Text("Next")),
+              ]),
+            )
+          ],
+        ),
       ),
     );
   }
 
-  Future<void> sendNotification() async {
+  Future<void> sendNotification(
+      {required String title,
+      required String body,
+      required String imgUrl,
+      required String url}) async {
     try {
       http.Response response = await http.post(
         Uri.parse('https://fcm.googleapis.com/fcm/send'),
@@ -77,13 +129,13 @@ class _HomePageState extends State<HomePage> {
         body: jsonEncode(
           <String, dynamic>{
             'notification': <String, dynamic>{
-              'body': 'test notification from admin app',
-              'title': 'Hello 😋',
+              'body': body,
+              'title': title,
             },
             'priority': 'high',
             'data': <String, dynamic>{
-              'imgUrl': 'FLUTTER_NOTIFICATION_CLICK',
-              'url': 'done',
+              'imgUrl': imgUrl,
+              'url': url,
               'id': 1,
             },
             'to': '/topics/news',
