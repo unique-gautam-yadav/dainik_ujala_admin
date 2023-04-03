@@ -1,0 +1,82 @@
+{
+  "project_info": {
+    "project_number": "8188421520",
+    "project_id": "dainik-ujala-live",
+    "storage_bucket": "dainik-ujala-live.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:8188421520:android:7e298af0ee3373f679ff15",
+        "android_client_info": {
+          "package_name": "com.dainikujala.live"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "8188421520-t568q2uuju94e11e7eieq2m0h373s2eg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBC9zwqNU3YyR0exxtIIKg0Spr5EncKmW4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "8188421520-t568q2uuju94e11e7eieq2m0h373s2eg.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "8188421520-vp3v7vpdvf1j7bb5kgq9m41ub6kk79kc.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.dainikujala.live"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:8188421520:android:154a0a22349c5c0379ff15",
+        "android_client_info": {
+          "package_name": "com.example.dainik_ujala_admin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "8188421520-t568q2uuju94e11e7eieq2m0h373s2eg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBC9zwqNU3YyR0exxtIIKg0Spr5EncKmW4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "8188421520-t568q2uuju94e11e7eieq2m0h373s2eg.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "8188421520-vp3v7vpdvf1j7bb5kgq9m41ub6kk79kc.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.dainikujala.live"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
