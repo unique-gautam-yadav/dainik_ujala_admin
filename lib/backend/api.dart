@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
 
 import 'models.dart';
 
 class FetchData {
   static String api = "https://dainikujala.live/wp-json/wp/v2/posts";
-
 
   static Future<Iterable<NewsArtical>> callApi(
       {int page = 1, category = 0, String? slug}) async {
@@ -55,5 +55,15 @@ class FetchData {
       log(e.toString());
     }
     return dataToBeSent;
+  }
+}
+
+class CloudFire {
+  static FirebaseFirestore store = FirebaseFirestore.instance;
+  static CollectionReference<dynamic> mediaCollection =
+      store.collection('posts');
+
+  static upload({required MediaModel data}) async {
+    await mediaCollection.doc(data.id).set(data.toMap());
   }
 }
