@@ -66,4 +66,16 @@ class CloudFire {
   static upload({required MediaModel data}) async {
     await mediaCollection.doc(data.id).set(data.toMap());
   }
+
+  static Future<List<MediaModel>> getAllPosts({int times = 1}) async {
+    QuerySnapshot<dynamic> d =
+        await mediaCollection.orderBy('timeStamp').limit(20 * times).get();
+    return List.generate(d.docs.length, (index) {
+      return MediaModel.fromMap(d.docs.elementAt(index).data());
+    });
+  }
+
+  static Future<void> deletePost(String id) async {
+    await mediaCollection.doc(id).delete();
+  }
 }

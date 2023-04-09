@@ -25,7 +25,7 @@ class _NewMediaPageState extends State<NewMediaPage> {
     XFile? rawFile = await ImagePicker().pickImage(source: src);
     if (rawFile != null) {
       CroppedFile? file =
-          await ImageCropper().cropImage(sourcePath: rawFile.path);
+          await ImageCropper().cropImage(sourcePath: rawFile.path, compressQuality: 100);
       if (file != null) {
         setState(() {
           image = File(file.path);

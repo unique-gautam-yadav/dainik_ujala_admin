@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:styled_widget/styled_widget.dart';
 
 class CustomButton extends StatefulWidget {
@@ -51,3 +54,42 @@ class _CustomButtonState extends State<CustomButton> {
     );
   }
 }
+
+class Utils{
+  
+  static Future<void> sendNotification(
+      {required String title,
+      required String body,
+      required String imgUrl,
+      required String url}) async {
+    try {
+      http.Response response = await http.post(
+        Uri.parse('https://fcm.googleapis.com/fcm/send'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization':
+              'key=AAAAAegRZZA:APA91bFVSfaC3HCQZ64J0kaD49RGoxiN15TcgryaB-FvKY50DJmEFmlRa0nQQmFOLz5LyosanHu1WkxuhXzCDtEHZfNn8TvxxV6XJpxq1WknKwSpBN82akfiYIscfEEL6F0kRQ7b-1WZ',
+        },
+        body: jsonEncode(
+          <String, dynamic>{
+            'notification': <String, dynamic>{
+              'body': body,
+              'title': title,
+            },
+            'priority': 'high',
+            'data': <String, dynamic>{
+              'imgUrl': imgUrl,
+              'url': url,
+              'id': 1,
+            },
+            'to': '/topics/news',
+          },
+        ),
+      );
+      response;
+    } catch (e) {
+      e;
+    }
+  }
+}
+

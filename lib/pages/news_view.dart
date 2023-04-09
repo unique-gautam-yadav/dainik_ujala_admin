@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 
 import '../backend/api.dart';
 import '../backend/models.dart';
+import '../utils.dart';
 
 class NewsNotifications extends StatefulWidget {
   const NewsNotifications({super.key});
@@ -34,17 +35,88 @@ class _NewsNotificationsState extends State<NewsNotifications> {
                       NewsArtical a = snapshot.data!.elementAt(index);
                       return ListTile(
                         onTap: () async {
-                          await sendNotification(
-                            body: a.title
-                                .replaceAll(RegExp(r'<[^>]*>|&[^;]+;'), ''),
-                            imgUrl: a.urlToImage,
-                            title: "Latest News",
-                            url: a.url,
+                          TextEditingController bodyController =
+                              TextEditingController();
+                          TextEditingController titleController =
+                              TextEditingController();
+                          bodyController.text = a.title;
+                          showModalBottomSheet(
+                            context: context,
+                            isScrollControlled: true,
+                            shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(12))),
+                            builder: (context) => Padding(
+                              padding: MediaQuery.of(context).viewInsets,
+                              child: Container(
+                                height: 250,
+                                padding: const EdgeInsets.all(10),
+                                decoration: const BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(12),
+                                        topRight: Radius.circular(12))),
+                                child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Container(
+                                          height: 5,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              4,
+                                          decoration: BoxDecoration(
+                                            color: Colors.grey.withOpacity(.9),
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                          )),
+                                      const SizedBox(height: 20),
+                                      TextFormField(
+                                        controller: titleController,
+                                        decoration: InputDecoration(
+                                          labelText: "Title",
+                                          hintText:
+                                              "Trending News || Latest News || Crucial Topic etc...",
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(height: 20),
+                                      TextFormField(
+                                        controller: bodyController,
+                                        decoration: InputDecoration(
+                                          labelText: "Body",
+                                          hintText: "Body for notification",
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                          ),
+                                        ),
+                                      ),
+                                      const Expanded(child: SizedBox.expand()),
+                                      ElevatedButton(
+                                          onPressed: () async {
+                                            Navigator.pop(context);
+                                            await Utils.sendNotification(
+                                              title: titleController.text,
+                                              body: bodyController.text,
+                                              imgUrl: a.urlToImage,
+                                              url: a.url,
+                                            );
+                                            if (context.mounted) {
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(const SnackBar(
+                                                content: Text("Sent"),
+                                              ));
+                                            }
+                                          },
+                                          child: const Text("Send"))
+                                    ]),
+                              ),
+                            ),
                           );
-                          if (context.mounted) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text("Sent")));
-                          }
                         },
                         title: Text(
                           a.title.replaceAll(RegExp(r'<[^>]*>|&[^;]+;'), ''),
@@ -104,40 +176,5 @@ class _NewsNotificationsState extends State<NewsNotifications> {
         ],
       ),
     );
-  }
-
-  Future<void> sendNotification(
-      {required String title,
-      required String body,
-      required String imgUrl,
-      required String url}) async {
-    try {
-      http.Response response = await http.post(
-        Uri.parse('https://fcm.googleapis.com/fcm/send'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          'Authorization':
-              'key=AAAAAegRZZA:APA91bFVSfaC3HCQZ64J0kaD49RGoxiN15TcgryaB-FvKY50DJmEFmlRa0nQQmFOLz5LyosanHu1WkxuhXzCDtEHZfNn8TvxxV6XJpxq1WknKwSpBN82akfiYIscfEEL6F0kRQ7b-1WZ',
-        },
-        body: jsonEncode(
-          <String, dynamic>{
-            'notification': <String, dynamic>{
-              'body': body,
-              'title': title,
-            },
-            'priority': 'high',
-            'data': <String, dynamic>{
-              'imgUrl': imgUrl,
-              'url': url,
-              'id': 1,
-            },
-            'to': '/topics/news',
-          },
-        ),
-      );
-      response;
-    } catch (e) {
-      e;
-    }
   }
 }
