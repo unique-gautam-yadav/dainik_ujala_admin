@@ -23,6 +23,19 @@ dependencies:
   cached_network_image: ^3.2.3
   firebase_core: ^2.9.0
   styled_widget: ^0.4.1
+  flutter_launcher_icons: ^0.13.0
+  flutter_native_splash: ^2.2.19
+
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/images/logo_play.png"
+
+flutter_native_splash:
+  color: "#F4C430"
+  image: assets/images/logo_play.png
+  android: true
+  ios: true
 
 dev_dependencies:
   flutter_test:
@@ -32,3 +45,7 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  assets:
+    - assets/
+    - assets/images/
