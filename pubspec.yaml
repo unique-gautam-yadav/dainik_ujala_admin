@@ -25,6 +25,9 @@ dependencies:
   styled_widget: ^0.4.1
   flutter_launcher_icons: ^0.13.0
   flutter_native_splash: ^2.2.19
+  video_thumbnail: ^0.5.3
+  video_player: ^2.6.1
+  webview_flutter: ^4.2.1
 
 flutter_icons:
   android: "launcher_icon"

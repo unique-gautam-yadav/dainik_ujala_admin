@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -55,13 +56,13 @@ class _CustomButtonState extends State<CustomButton> {
   }
 }
 
-class Utils{
-  
+class Utils {
   static Future<void> sendNotification(
       {required String title,
       required String body,
       required String imgUrl,
       required String url}) async {
+    log("aslkdjf");
     try {
       http.Response response = await http.post(
         Uri.parse('https://fcm.googleapis.com/fcm/send'),
@@ -82,7 +83,7 @@ class Utils{
               'url': url,
               'id': 1,
             },
-            'to': '/topics/news',
+            'to': '/topics/news-dev',
           },
         ),
       );
@@ -92,4 +93,3 @@ class Utils{
     }
   }
 }
-

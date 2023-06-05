@@ -53,11 +53,14 @@ class MediaModel {
   String? timeStamp;
   String? path;
   String? captions;
+  bool isVideo;
+
   MediaModel({
     this.id,
     this.timeStamp,
     this.path,
     this.captions,
+   required this.isVideo,
   });
 
   Map<String, dynamic> toMap() {
@@ -66,6 +69,7 @@ class MediaModel {
       'timeStamp': timeStamp,
       'path': path,
       'captions': captions,
+      'isVedio': isVideo,
     };
   }
 
@@ -75,6 +79,7 @@ class MediaModel {
       timeStamp: map['timeStamp'] != null ? map['timeStamp'] as String : null,
       path: map['path'] != null ? map['path'] as String : null,
       captions: map['captions'] != null ? map['captions'] as String : null,
+      isVideo: map['isVedio'] != null ? map['isVedio'] as bool : false,
     );
   }
 
@@ -82,4 +87,45 @@ class MediaModel {
 
   factory MediaModel.fromJson(String source) =>
       MediaModel.fromMap(json.decode(source) as Map<String, dynamic>);
+}
+
+class AdvtModel {
+  String id;
+  String imageUrl;
+  String link;
+  String title;
+  bool onMainScreen;
+
+  AdvtModel({
+    required this.id,
+    required this.imageUrl,
+    required this.link,
+    required this.title,
+    required this.onMainScreen,
+  });
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'id': id,
+      'imageUrl': imageUrl,
+      'link': link,
+      'title': title,
+      'onMainScreen': onMainScreen,
+    };
+  }
+
+  factory AdvtModel.fromMap(Map<String, dynamic> map) {
+    return AdvtModel(
+      id: map['id'] as String,
+      imageUrl: map['imageUrl'] as String,
+      link: map['link'] as String,
+      title: map['title'] as String,
+      onMainScreen: map['onMainScreen'] as bool,
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory AdvtModel.fromJson(String source) =>
+      AdvtModel.fromMap(json.decode(source) as Map<String, dynamic>);
 }

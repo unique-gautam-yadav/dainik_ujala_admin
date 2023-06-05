@@ -28,6 +28,7 @@ class _NewsNotificationsState extends State<NewsNotifications> {
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   return ListView.builder(
+                    physics: const BouncingScrollPhysics(),
                     itemCount: snapshot.data!.length,
                     itemBuilder: (context, index) {
                       NewsArtical a = snapshot.data!.elementAt(index);
@@ -138,11 +139,11 @@ class _NewsNotificationsState extends State<NewsNotifications> {
                     },
                   );
                 } else {
-                  return const Center(
-                    child: SizedBox(
-                        height: 50,
-                        width: 50,
-                        child: CircularProgressIndicator()),
+                  return Center(
+                    child: CircularProgressIndicator(
+                      color: Theme.of(context).iconTheme.color,
+                      strokeWidth: 5,
+                    ),
                   );
                 }
               },

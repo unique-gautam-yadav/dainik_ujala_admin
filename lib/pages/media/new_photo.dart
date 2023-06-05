@@ -6,26 +6,26 @@ import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../backend/api.dart';
-import '../backend/models.dart';
-import '../utils.dart';
+import '../../backend/api.dart';
+import '../../backend/models.dart';
+import '../../utils.dart';
 
-class NewMediaPage extends StatefulWidget {
-  const NewMediaPage({super.key});
+class NewPhotoPage extends StatefulWidget {
+  const NewPhotoPage({super.key});
 
   @override
-  State<NewMediaPage> createState() => _NewMediaPageState();
+  State<NewPhotoPage> createState() => _NewPhotoPageState();
 }
 
-class _NewMediaPageState extends State<NewMediaPage> {
+class _NewPhotoPageState extends State<NewPhotoPage> {
   File? image;
 
   pickFile({required ImageSource src}) async {
     log("$src");
     XFile? rawFile = await ImagePicker().pickImage(source: src);
     if (rawFile != null) {
-      CroppedFile? file =
-          await ImageCropper().cropImage(sourcePath: rawFile.path, compressQuality: 100);
+      CroppedFile? file = await ImageCropper()
+          .cropImage(sourcePath: rawFile.path, compressQuality: 100);
       if (file != null) {
         setState(() {
           image = File(file.path);
@@ -40,19 +40,17 @@ class _NewMediaPageState extends State<NewMediaPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Hero(
-          tag: "hr",
-          child: Text(
-            "New",
-            style: TextStyle(
-                fontSize: 18,
-                color: Colors.black,
-                decoration: TextDecoration.none,
-                fontWeight: FontWeight.normal),
-          ),
+        title: const Text(
+          "New",
+          style: TextStyle(
+              fontSize: 18,
+              color: Colors.black,
+              decoration: TextDecoration.none,
+              fontWeight: FontWeight.normal),
         ),
       ),
       body: SingleChildScrollView(
+        physics: const ClampingScrollPhysics(),
         child: Padding(
           padding: const EdgeInsets.all(12.0),
           child: Column(
@@ -156,7 +154,10 @@ class _NewMediaPageState extends State<NewMediaPage> {
                     padding: MaterialStateProperty.all(
                         const EdgeInsets.symmetric(horizontal: 45))),
                 onPressed: () async {
-                  MediaModel data = MediaModel(captions: caption.text);
+                  MediaModel data = MediaModel(
+                    captions: caption.text,
+                    isVideo: false,
+                  );
                   String timeStamp =
                       DateTime.now().millisecondsSinceEpoch.toString();
                   data.timeStamp = timeStamp;
